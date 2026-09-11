@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #080812;
+    color: #F8FAFC;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    selection-background-color: #EC4899;
+    selection-color: #ffffff;
+  }
+}
+
+/* Mobile Safe Area Inset Support */
+.safe-area-bottom {
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+
+.safe-area-top {
+  padding-top: max(12px, env(safe-area-inset-top));
+}
+
+/* Dark Cyber-Comedy Presentation Backgrounds */
+.bg-cyber-dark {
+  background-color: #080812;
+}
+
+.bg-grid-cyber {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(236, 72, 153, 0.04) 1px, transparent 1px);
+}
+
+.bg-radial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.18) 0%, rgba(236, 72, 153, 0.10) 40%, rgba(34, 211, 238, 0.04) 65%, transparent 80%);
+}
+
+/* Cyber-Comedy Glassmorphism Cards & Panels */
+.cyber-glass {
+  background: rgba(17, 17, 31, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.6);
+}
+
+.cyber-card {
+  background: #11111F;
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+.cyber-surface-secondary {
+  background: #19192B;
+}
+
+/* Neon Cyber Gradient Utilities */
+.gradient-purple-pink {
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+}
+
+.gradient-cyan-purple {
+  background: linear-gradient(135deg, #22D3EE 0%, #8B5CF6 100%);
+}
+
+.gradient-red-pink {
+  background: linear-gradient(135deg, #FF3B5C 0%, #EC4899 100%);
+}
+
+/* Screen Shake Keyframes */
+@keyframes ooku-screen-shake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-6px, 4px) rotate(-1deg); }
+  30% { transform: translate(6px, -4px) rotate(1deg); }
+  45% { transform: translate(-4px, -2px) rotate(-0.5deg); }
+  60% { transform: translate(4px, 2px) rotate(0.5deg); }
+  75% { transform: translate(-2px, 1px); }
+}
+
+.animate-ooku-screen-shake {
+  animation: ooku-screen-shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Message Bubble Entrance Animation */
+@keyframes message-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-message-pop {
+  animation: message-pop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ooku Message Impact Transformation */
+@keyframes ooku-message-impact {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.04) rotate(-1deg); box-shadow: 0 0 25px rgba(255, 59, 92, 0.6); }
+  60% { transform: scale(0.98) rotate(1deg); }
+  100% { transform: scale(1); }
+}
+
+.animate-ooku-message-impact {
+  animation: ooku-message-impact 0.5s ease-in-out forwards;
+}
+
+/* Gaming Kill Notification Overlay Keyframes */
+@keyframes kill-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(30px);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.18) translateY(-6px);
+  }
+  60% {
+    transform: scale(0.98) translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-kill-pop {
+  animation: kill-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Floating Emoji Upward Drift */
+@keyframes float-up-fade {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.8) rotate(0deg);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateY(-90px) scale(1.2) rotate(12deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-180px) scale(0.9) rotate(-12deg);
+  }
+}
+
+.animate-float-up {
+  animation: float-up-fade 2.2s ease-out forwards;
+}
+
+/* Slow Ambient Floaters */
+@keyframes float-ambient {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(8deg); }
+}
+
+.animate-float-slow {
+  animation: float-ambient 6s ease-in-out infinite;
+}
+
+/* Damage Counter Jump & Flash */
+@keyframes damage-jump {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.35) rotate(-3deg); color: #FF3B5C; text-shadow: 0 0 20px rgba(255, 59, 92, 0.8); }
+}
+
+.animate-damage-jump {
+  animation: damage-jump 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Combo Bounce Keyframe */
+@keyframes combo-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.25) rotate(-3deg); }
+}
+
+.animate-combo-bounce {
+  animation: combo-bounce 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Leaderboard Takeover Toast Slide */
+@keyframes takeover-slide {
+  0% { transform: translateY(-40px) scale(0.8); opacity: 0; }
+  20% { transform: translateY(0) scale(1.08); opacity: 1; }
+  35% { transform: scale(1); }
+  85% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-30px) scale(0.9); opacity: 0; }
+}
+
+.animate-takeover-banner {
+  animation: takeover-slide 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Medical Scanner Bar */
+@keyframes scan-line {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.animate-scan-line {
+  animation: scan-line 2.2s ease-in-out forwards;
+}
+
+/* Accessibility / Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ooku-screen-shake,
+  .animate-kill-pop,
+  .animate-float-up,
+  .animate-float-slow,
+  .animate-damage-jump,
+  .animate-combo-bounce,
+  .animate-takeover-banner,
+  .animate-ooku-message-impact {
+    animation: none !important;
+    transform: none !important;
+  }
+  
+  .animate-message-pop {
+    animation: simple-fade 0.15s ease-in forwards !important;
+  }
+}
+
+@keyframes simple-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
