@@ -134,7 +134,7 @@ For Software:
 
 # Video
 
-[Add your demo video link here]
+(https://drive.google.com/file/d/1IfcQzmSW-OCDLDp-6HI39xabkjHESagH/view?usp=drivesdk)
 
 *The demo shows room creation, multiplayer joining, real-time chatting, AI-powered Ooku detection, voice playback, scoring, reactions and the final leaderboard.*
 
