@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, LogOut, Flame, Trophy } from 'lucide-react';
 
 const PLACEHOLDERS = [
   "Say something questionable...",
@@ -19,7 +19,14 @@ const TYPING_MESSAGES = [
   "is thinking... dangerous."
 ];
 
-export function MessageInput({ onSendMessage, disabled = false, userName = "Someone" }) {
+export function MessageInput({
+  onSendMessage,
+  disabled = false,
+  userName = "Someone",
+  isExited = false,
+  userDamage = 0,
+  userRank = "#1"
+}) {
   const [text, setText] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [typingStatus, setTypingStatus] = useState(null);
@@ -31,6 +38,32 @@ export function MessageInput({ onSendMessage, disabled = false, userName = "Some
     }, 7000);
     return () => clearInterval(interval);
   }, []);
+
+  if (isExited) {
+    return (
+      <div className="sticky bottom-0 z-30 cyber-glass border-t border-rose-500/40 p-4 sm:p-5 backdrop-blur-2xl safe-area-bottom">
+        <div className="max-w-md mx-auto p-4 rounded-2xl bg-gradient-to-r from-[#19192B] to-[#11111F] border border-rose-500/40 text-white text-center shadow-xl space-y-2">
+          <div className="flex items-center justify-center gap-2 text-rose-400 font-mono font-extrabold text-base sm:text-lg">
+            <LogOut className="w-5 h-5 text-rose-400 animate-pulse" />
+            <span>🚪 YOU LEFT THE ROOM</span>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-mono pt-1">
+            <span className="px-3 py-1.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-300 font-bold shadow-md">
+              🔥 {userDamage} DAMAGE
+            </span>
+            <span className="px-3 py-1.5 rounded-xl bg-amber-950/70 border border-amber-500/40 text-amber-300 font-bold shadow-md">
+              🏆 {userRank}
+            </span>
+          </div>
+
+          <p className="text-[11px] sm:text-xs font-mono text-slate-400 pt-1">
+            Your score is saved. You can watch the chat live until everyone exits!
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Show typing status indicator when typing
   const handleInputChange = (e) => {

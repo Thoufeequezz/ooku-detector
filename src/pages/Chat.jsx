@@ -1,32 +1,30 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { Flame, Eye, Radio, Sparkles, ChevronDown, ChevronUp, UserPlus, LogOut } from 'lucide-react';
 import { ChatHeader } from '../components/ChatHeader';
 import { ChatMessage } from '../components/ChatMessage';
 import { MessageInput } from '../components/MessageInput';
-import { OokuReaction } from '../components/OokuReaction';
-import { OokuKillNotification } from '../components/OokuKillNotification';
 import { LiveScoreboard } from '../components/LiveScoreboard';
 import { LiveDamageCounter } from '../components/LiveDamageCounter';
-import { BackgroundFloatingEmojis } from '../components/BackgroundFloatingEmojis';
+import { OokuKillNotification } from '../components/OokuKillNotification';
+import { OokuReaction } from '../components/OokuReaction';
 import { EndChatModal } from '../components/EndChatModal';
+import { ExitConfirmationModal } from '../components/ExitConfirmationModal';
+import { BackgroundFloatingEmojis } from '../components/BackgroundFloatingEmojis';
+import { getParticipantSession } from '../utils/roomStorage';
+import { audioQueue } from '../services/audioQueue';
 import { 
   sendMessage, 
   recordOokuEvent, 
   fetchRoomDetails, 
   subscribeToRoom, 
-  endRoomSession 
+  endRoomSession,
+  exitParticipantFromRoom
 } from '../services/supabase';
-import { getParticipantSession } from '../utils/roomStorage';
 import { analyzeChatMessage, calculateOokuDamage } from '../services/aiService';
-import { detectCombo } from '../utils/comboDetector';
-import { audioQueue } from '../services/audioQueue';
-import { Radio, Eye, UserPlus, Flame, Sparkles, ChevronDown, ChevronUp } from 'lucide-react';
+import { calculatePlayerStats } from '../utils/scoreCalculator';
 
 const REFEREE_COMMENTARY = [
-  "👀 AI referee is taking notes...",
-  "📝 Interesting choice of words.",
-  "😭 That one definitely landed.",
-  "🤨 We need to investigate this friendship.",
   "🔥 Things are escalating.",
   "💀 Nobody asked for that.",
   "💀 HR has been informed.",
@@ -37,6 +35,27 @@ const REFEREE_COMMENTARY = [
 function isDuplicate(list, item) {
   if (!item || !item.id) return false;
   return list.some((m) => m.id === item.id);
+}
+
+function detectCombo(ookuEvents = []) {
+  if (!ookuEvents || ookuEvents.length === 0) return { comboText: null };
+  const sorted = [...ookuEvents].sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  const latest = sorted[0];
+  if (!latest) return { comboText: null };
+
+  let comboCount = 1;
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i].speaker === latest.speaker) {
+      comboCount++;
+    } else {
+      break;
+    }
+  }
+
+  if (comboCount >= 2) {
+    return { comboText: `🔥 x${comboCount} COMBO (${latest.speaker})` };
+  }
+  return { comboText: null };
 }
 
 export function Chat() {
@@ -51,6 +70,8 @@ export function Chat() {
   const [ookuEvents, setOokuEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEndModalOpen, setIsEndModalOpen] = useState(false);
+  const [isExitModalOpen, setIsExitModalOpen] = useState(false);
+  const [currentUserIsExited, setCurrentUserIsExited] = useState(false);
   const [refereeNote, setRefereeNote] = useState(null);
 
   // Comedy UI Animation & State
@@ -63,11 +84,7 @@ export function Chat() {
 
   const triggerOokuAnimationEffects = (event) => {
     if (!event || !event.isOoku) return;
-    
-    // Kill Notification Overlay
     setActiveKillEvent(event);
-
-    // Screen Shake
     setIsScreenShaking(true);
     setTimeout(() => setIsScreenShaking(false), 650);
   };
@@ -113,9 +130,13 @@ export function Chat() {
         const details = await fetchRoomDetails(roomCode);
         
         if (details.members && details.members.length > 0) {
-          setMembers(details.members.map(m => typeof m === 'string' ? m : m.name));
+          setMembers(details.members);
+          const currentMem = details.members.find(m => (m.participant_id || m.id) === (sessionInfo.participantId || sessionInfo.name) || m.name === sessionInfo.name);
+          if (currentMem && currentMem.is_active === false) {
+            setCurrentUserIsExited(true);
+          }
         } else {
-          setMembers([sessionInfo.name]);
+          setMembers([{ id: sessionInfo.participantId || sessionInfo.name, participant_id: sessionInfo.participantId || sessionInfo.name, name: sessionInfo.name, is_active: true }]);
         }
 
         if (isExplicitDemo && (!details.messages || details.messages.length === 0)) {
@@ -127,7 +148,7 @@ export function Chat() {
           audioQueue.initRoom(details.roomId, roomCode, details.messages || []);
         }
 
-        // Realtime subscription listening specifically to current room_id
+        // Realtime subscription
         unsubscribe = subscribeToRoom(
           roomCode,
           details.roomId,
@@ -137,20 +158,22 @@ export function Chat() {
               const next = [...prev, newMsg];
               return next.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
             });
-
-            // Queue Gemini TTS speech for incoming message
             audioQueue.queueSpeech(newMsg, details.roomId, roomCode);
           },
           (newMember) => {
             const name = typeof newMember === 'string' ? newMember : newMember.name;
+            const pId = typeof newMember === 'object' ? newMember.participant_id : name;
             if (name) {
-              setMembers((prev) => (prev.includes(name) ? prev : [...prev, name]));
+              setMembers((prev) => {
+                if (prev.some(m => (m.participant_id || m.name) === pId)) return prev;
+                return [...prev, { id: pId, participant_id: pId, name, is_active: true }];
+              });
               
               const joinSysMsg = {
-                id: `sys_${name}_${newMember.joined_at || Date.now()}`,
+                id: `sys_join_${pId}_${Date.now()}`,
                 isSystem: true,
                 text: `🟢 ${name} joined the chat`,
-                created_at: newMember.joined_at || new Date().toISOString()
+                created_at: new Date().toISOString()
               };
 
               setMessages((prev) => {
@@ -165,7 +188,6 @@ export function Chat() {
               return [newEvent, ...prev];
             });
 
-            // Play audio reaction & trigger comedy animations
             if (newEvent && newEvent.isOoku) {
               audioQueue.queueOokuReaction(newEvent, details.roomId, roomCode);
               triggerOokuAnimationEffects(newEvent);
@@ -173,13 +195,66 @@ export function Chat() {
           },
           () => {
             navigate(`/report/${roomCode}`);
+          },
+          (updatedMember) => {
+            if (updatedMember && updatedMember.is_active === false) {
+              const name = updatedMember.name || 'A participant';
+              const pId = updatedMember.participant_id;
+
+              if (pId === (sessionInfo.participantId || sessionInfo.name) || name === sessionInfo.name) {
+                setCurrentUserIsExited(true);
+              }
+
+              setMembers((prev) => prev.map(m => (m.participant_id || m.name) === pId ? { ...m, is_active: false } : m));
+
+              const exitSysMsg = {
+                id: `sys_exit_${pId}_${Date.now()}`,
+                isSystem: true,
+                isExit: true,
+                text: `🚪 ${name.toUpperCase()} LEFT THE CHAOS`,
+                created_at: new Date().toISOString()
+              };
+
+              setMessages((prev) => {
+                if (prev.some((m) => m.id === exitSysMsg.id || (m.isSystem && m.text === exitSysMsg.text))) return prev;
+                return [...prev, exitSysMsg];
+              });
+
+              // Check if all members are now inactive
+              setMembers((prev) => {
+                const activeCount = prev.filter(m => m.is_active !== false).length;
+                if (activeCount === 0) {
+                  navigate(`/report/${roomCode}`);
+                }
+                return prev;
+              });
+            }
           }
         );
 
-        // 2.5s Auto-sync polling loop so refresh is NEVER required on mobile networks
+        // 2.5s Auto-sync polling loop
         pollInterval = setInterval(async () => {
           try {
             const latest = await fetchRoomDetails(roomCode);
+
+            if (!latest.isActive) {
+              navigate(`/report/${roomCode}`);
+              return;
+            }
+
+            if (latest.members && latest.members.length > 0) {
+              setMembers(latest.members);
+              const currentMem = latest.members.find(m => (m.participant_id || m.id) === (sessionInfo.participantId || sessionInfo.name) || m.name === sessionInfo.name);
+              if (currentMem && currentMem.is_active === false) {
+                setCurrentUserIsExited(true);
+              }
+              const activeCount = latest.members.filter(m => m.is_active !== false).length;
+              if (activeCount === 0) {
+                navigate(`/report/${roomCode}`);
+                return;
+              }
+            }
+
             if (latest.messages && latest.messages.length > 0) {
               setMessages((prev) => {
                 let updated = false;
@@ -194,6 +269,7 @@ export function Chat() {
                 return updated ? next.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0)) : prev;
               });
             }
+
             if (latest.ookuEvents && latest.ookuEvents.length > 0) {
               setOokuEvents((prev) => {
                 let updated = false;
@@ -206,13 +282,6 @@ export function Chat() {
                   }
                 });
                 return updated ? next : prev;
-              });
-            }
-            if (latest.members && latest.members.length > 0) {
-              const names = latest.members.map(m => typeof m === 'string' ? m : m.name);
-              setMembers((prev) => {
-                const combined = Array.from(new Set([...prev, ...names]));
-                return combined.length !== prev.length ? combined : prev;
               });
             }
           } catch (e) {
@@ -305,6 +374,15 @@ export function Chat() {
     }
   };
 
+  const handleConfirmExit = async () => {
+    setIsExitModalOpen(false);
+    const res = await exitParticipantFromRoom(roomCode, sessionInfo.participantId || sessionInfo.name);
+    setCurrentUserIsExited(true);
+    if (res && res.allExited) {
+      navigate(`/report/${roomCode}`);
+    }
+  };
+
   const handleConfirmEndChat = async () => {
     setIsEndModalOpen(false);
     await endRoomSession(roomCode);
@@ -314,6 +392,11 @@ export function Chat() {
   const totalOokuCount = ookuEvents.filter(e => e.isOoku).length;
   const totalDamageCount = ookuEvents.reduce((acc, e) => acc + (Number(e.damage) || ((Number(e.intensity) || 7) * 10)), 0);
   const comboState = detectCombo(ookuEvents);
+
+  const playerStats = calculatePlayerStats(messages, ookuEvents, members);
+  const currentUserStat = playerStats.allPlayers.find(p => p.name === sessionInfo.name);
+  const currentUserDamage = currentUserStat ? currentUserStat.damage : 0;
+  const currentUserRank = currentUserStat ? `#${currentUserStat.rank}` : '#1';
 
   return (
     <div className={`min-h-screen bg-[#080812] text-[#F8FAFC] flex flex-col font-sans selection:bg-[#EC4899] transition-all ${isScreenShaking ? 'animate-ooku-screen-shake' : ''}`}>
@@ -336,6 +419,7 @@ export function Chat() {
         totalDamage={totalDamageCount}
         isCreator={sessionInfo.isCreator}
         onOpenEndModal={() => setIsEndModalOpen(true)}
+        onOpenExitModal={() => setIsExitModalOpen(true)}
       />
 
       {/* Mobile Collapsible Scoreboard Drawer Button */}
@@ -357,7 +441,7 @@ export function Chat() {
       {/* Mobile Collapsible Scoreboard Content */}
       {isMobileScoreboardOpen && (
         <div className="lg:hidden p-4 bg-[#11111F] border-b border-purple-500/30 animate-fadeIn z-30 space-y-4">
-          <LiveScoreboard ookuEvents={ookuEvents} members={members} />
+          <LiveScoreboard ookuEvents={ookuEvents} members={members} messages={messages} />
           <LiveDamageCounter totalDamage={totalDamageCount} />
         </div>
       )}
@@ -366,7 +450,7 @@ export function Chat() {
       <div className="flex-1 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 p-4 sm:p-6 overflow-hidden">
         {/* Left Panel (Desktop Scoreboard) */}
         <aside className="hidden lg:block lg:col-span-3 cyber-glass rounded-3xl p-5 border border-purple-500/20 space-y-4 h-fit sticky top-20">
-          <LiveScoreboard ookuEvents={ookuEvents} members={members} />
+          <LiveScoreboard ookuEvents={ookuEvents} members={members} messages={messages} />
         </aside>
 
         {/* Center Panel (Dominant Chat Stream) */}
@@ -404,10 +488,15 @@ export function Chat() {
               /* Messages Stream */
               messages.map((msg, index) => {
                 if (msg.isSystem) {
+                  const isExitMsg = msg.isExit;
                   return (
                     <div key={msg.id || `sys_${index}`} className="my-2.5 flex justify-center animate-fadeIn">
-                      <span className="px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-xs sm:text-sm font-mono text-emerald-300 flex items-center gap-2 shadow-md">
-                        <UserPlus className="w-4 h-4 text-emerald-400" />
+                      <span className={`px-4 py-2 rounded-2xl border text-xs sm:text-sm font-mono font-bold flex items-center gap-2 shadow-lg ${
+                        isExitMsg 
+                          ? 'bg-rose-950/90 border-rose-500/50 text-rose-200 shadow-rose-900/30' 
+                          : 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300'
+                      }`}>
+                        {isExitMsg ? <LogOut className="w-4 h-4 text-rose-400" /> : <UserPlus className="w-4 h-4 text-emerald-400" />}
                         <span>{msg.text}</span>
                       </span>
                     </div>
@@ -455,8 +544,11 @@ export function Chat() {
           {/* Fixed Composer Input */}
           <MessageInput
             onSendMessage={handleSendMessage}
-            disabled={isLoading}
+            disabled={isLoading || currentUserIsExited}
             userName={sessionInfo.name || "Someone"}
+            isExited={currentUserIsExited}
+            userDamage={currentUserDamage}
+            userRank={currentUserRank}
           />
         </main>
 
@@ -481,8 +573,10 @@ export function Chat() {
                 <span className="font-bold text-rose-400">{comboState.comboText || 'None'}</span>
               </div>
               <div className="flex justify-between py-1 border-b border-purple-500/10">
-                <span>AI Referee</span>
-                <span className="font-bold text-emerald-400">ONLINE 🟢</span>
+                <span>Your Status</span>
+                <span className={`font-bold ${currentUserIsExited ? 'text-rose-400' : 'text-emerald-400'}`}>
+                  {currentUserIsExited ? '🚪 EXITED' : 'ONLINE 🟢'}
+                </span>
               </div>
             </div>
           </div>
@@ -494,6 +588,15 @@ export function Chat() {
         isOpen={isEndModalOpen}
         onClose={() => setIsEndModalOpen(false)}
         onConfirm={handleConfirmEndChat}
+      />
+
+      {/* Participant Exit Confirmation Modal */}
+      <ExitConfirmationModal
+        isOpen={isExitModalOpen}
+        onClose={() => setIsExitModalOpen(false)}
+        onConfirmExit={handleConfirmExit}
+        currentDamage={currentUserDamage}
+        currentRank={currentUserRank}
       />
     </div>
   );

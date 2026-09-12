@@ -356,6 +356,83 @@ export async function recordOokuEvent(roomCode, eventData) {
 }
 
 /**
+ * EXIT PARTICIPANT FROM ROOM
+ */
+export async function exitParticipantFromRoom(roomCode, participantId) {
+  const formattedCode = roomCode.trim().toUpperCase();
+  const timestamp = new Date().toISOString();
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data: room } = await supabase
+        .from('rooms')
+        .select('id')
+        .eq('room_code', formattedCode)
+        .maybeSingle();
+
+      if (room) {
+        await supabase
+          .from('room_members')
+          .update({ is_active: false })
+          .eq('room_id', room.id)
+          .eq('participant_id', participantId);
+
+        const { data: activeMembers } = await supabase
+          .from('room_members')
+          .select('id')
+          .eq('room_id', room.id)
+          .eq('is_active', true);
+
+        const allExited = !activeMembers || activeMembers.length === 0;
+
+        if (allExited) {
+          await supabase
+            .from('rooms')
+            .update({ is_active: false, ended_at: timestamp })
+            .eq('id', room.id);
+        }
+
+        return { success: true, allExited };
+      }
+    } catch (err) {
+      console.warn("Supabase exitParticipant error:", err);
+    }
+  }
+
+  // Fallback local storage
+  const members = getLocalData(LOCAL_MEMBERS_KEY);
+  if (members[formattedCode]) {
+    members[formattedCode] = members[formattedCode].map(m => 
+      m.participant_id === participantId ? { ...m, is_active: false, exited_at: timestamp } : m
+    );
+    setLocalData(LOCAL_MEMBERS_KEY, members);
+  }
+
+  const active = (members[formattedCode] || []).filter(m => m.is_active !== false);
+  const allExited = active.length === 0;
+
+  if (allExited) {
+    const rooms = getLocalData(LOCAL_ROOMS_KEY);
+    if (rooms[formattedCode]) {
+      rooms[formattedCode].is_active = false;
+      rooms[formattedCode].ended_at = timestamp;
+      setLocalData(LOCAL_ROOMS_KEY, rooms);
+    }
+  }
+
+  if (broadcastChannel) {
+    broadcastChannel.postMessage({
+      type: 'MEMBER_EXITED',
+      participantId,
+      roomCode: formattedCode,
+      allExited
+    });
+  }
+
+  return { success: true, allExited };
+}
+
+/**
  * FETCH INITIAL ROOM DETAILS (Chronologically sorted by created_at ASC)
  */
 export async function fetchRoomDetails(roomCode) {
@@ -370,9 +447,9 @@ export async function fetchRoomDetails(roomCode) {
           room_code,
           created_by_participant,
           is_active,
-          room_members ( participant_id, name, joined_at ),
+          room_members ( participant_id, name, joined_at, is_active ),
           messages ( id, room_id, participant_id, sender_name, message, created_at ),
-          ooku_events ( id, room_id, message_id, participant_id, sender_name, target_name, type, intensity, created_at )
+          ooku_events ( id, room_id, message_id, participant_id, sender_name, target_name, type, intensity, damage, created_at )
         `)
         .eq('room_code', formattedCode)
         .single();
@@ -386,7 +463,12 @@ export async function fetchRoomDetails(roomCode) {
           roomCode: formattedCode,
           createdByParticipant: room.created_by_participant,
           isActive: room.is_active,
-          members: (room.room_members || []).map(m => ({ id: m.participant_id, name: m.name })),
+          members: (room.room_members || []).map(m => ({ 
+            id: m.participant_id, 
+            participant_id: m.participant_id, 
+            name: m.name,
+            is_active: m.is_active !== false
+          })),
           messages: sortedMsgs,
           ookuEvents: sortedEvents.map(e => ({
             ...e,
@@ -415,7 +497,12 @@ export async function fetchRoomDetails(roomCode) {
     roomCode: formattedCode,
     createdByParticipant: room.created_by_participant,
     isActive: room.is_active,
-    members: members.map(m => ({ id: m.participant_id, name: m.name })),
+    members: members.map(m => ({ 
+      id: m.participant_id, 
+      participant_id: m.participant_id, 
+      name: m.name,
+      is_active: m.is_active !== false
+    })),
     messages: sortedMsgs,
     ookuEvents: sortedEvents
   };
@@ -424,7 +511,7 @@ export async function fetchRoomDetails(roomCode) {
 /**
  * SUBSCRIBE TO REALTIME ROOM MESSAGES & EVENTS
  */
-export function subscribeToRoom(roomCode, roomId, onMessage, onMemberJoin, onEvent, onRoomEnd) {
+export function subscribeToRoom(roomCode, roomId, onMessage, onMemberJoin, onEvent, onRoomEnd, onMemberUpdate) {
   const formattedCode = roomCode.trim().toUpperCase();
   let channel = null;
 
@@ -432,12 +519,14 @@ export function subscribeToRoom(roomCode, roomId, onMessage, onMemberJoin, onEve
     const channelName = roomId ? `room_channel_${roomId}` : `room_channel_${formattedCode}`;
     const msgOpts = { event: 'INSERT', schema: 'public', table: 'messages' };
     const memberOpts = { event: 'INSERT', schema: 'public', table: 'room_members' };
+    const memberUpdateOpts = { event: 'UPDATE', schema: 'public', table: 'room_members' };
     const eventOpts = { event: 'INSERT', schema: 'public', table: 'ooku_events' };
     const roomOpts = { event: 'UPDATE', schema: 'public', table: 'rooms' };
 
     if (roomId) {
       msgOpts.filter = `room_id=eq.${roomId}`;
       memberOpts.filter = `room_id=eq.${roomId}`;
+      memberUpdateOpts.filter = `room_id=eq.${roomId}`;
       eventOpts.filter = `room_id=eq.${roomId}`;
       roomOpts.filter = `id=eq.${roomId}`;
     }
@@ -452,6 +541,11 @@ export function subscribeToRoom(roomCode, roomId, onMessage, onMemberJoin, onEve
       .on('postgres_changes', memberOpts, payload => {
         if (!roomId || payload.new.room_id === roomId) {
           if (onMemberJoin) onMemberJoin(payload.new);
+        }
+      })
+      .on('postgres_changes', memberUpdateOpts, payload => {
+        if (!roomId || payload.new.room_id === roomId) {
+          if (onMemberUpdate) onMemberUpdate(payload.new);
         }
       })
       .on('postgres_changes', eventOpts, payload => {

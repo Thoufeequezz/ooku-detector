@@ -9,7 +9,8 @@ export function ChatHeader({
   ookuCount = 0,
   totalDamage = 0,
   isCreator = false,
-  onOpenEndModal
+  onOpenEndModal,
+  onOpenExitModal
 }) {
   const [isMembersOpen, setIsMembersOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -87,23 +88,30 @@ export function ChatHeader({
           </button>
 
           {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-52 cyber-glass rounded-2xl border border-purple-500/30 shadow-2xl p-2 z-50 animate-fadeIn">
-              {isCreator ? (
+            <div className="absolute right-0 mt-2 w-56 cyber-glass rounded-2xl border border-purple-500/30 shadow-2xl p-2 z-50 animate-fadeIn space-y-1.5">
+              {/* EXIT ROOM BUTTON FOR EVERY PARTICIPANT */}
+              <button
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  if (onOpenExitModal) onOpenExitModal();
+                }}
+                className="w-full text-left px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600/90 to-red-600/90 hover:from-rose-500 hover:to-red-500 text-white text-xs sm:text-sm font-mono font-bold flex items-center gap-2 border border-rose-400/40 shadow-md transition-colors cursor-pointer"
+              >
+                <LogOut className="w-4 h-4 text-white" />
+                <span>🚪 EXIT ROOM</span>
+              </button>
+
+              {isCreator && (
                 <button
                   onClick={() => {
                     setIsMenuOpen(false);
                     onOpenEndModal();
                   }}
-                  className="w-full text-left px-3.5 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/80 text-rose-200 text-xs sm:text-sm font-mono font-bold flex items-center gap-2 border border-rose-500/40 transition-colors cursor-pointer"
+                  className="w-full text-left px-3.5 py-2.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 text-xs sm:text-sm font-mono font-bold flex items-center gap-2 border border-purple-500/40 transition-colors cursor-pointer"
                 >
-                  <LogOut className="w-4 h-4 text-rose-400" />
-                  <span>End Chat 💀</span>
+                  <Skull className="w-4 h-4 text-purple-400" />
+                  <span>End Chat 💀 (Host)</span>
                 </button>
-              ) : (
-                <div className="px-3 py-2 text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
-                  <ShieldAlert className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>Only host can end session</span>
-                </div>
               )}
             </div>
           )}
