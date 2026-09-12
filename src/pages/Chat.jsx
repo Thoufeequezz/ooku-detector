@@ -429,12 +429,12 @@ export function Chat() {
           className="text-xs font-mono font-bold text-purple-300 flex items-center gap-1.5 cursor-pointer"
         >
           <Flame className="w-4 h-4 text-[#FF3B5C]" />
-          <span>LIVE SCOREBOARD & DAMAGE</span>
+          <span>LIVE SCOREBOARD & POINTS</span>
           {isMobileScoreboardOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
 
         <span className="text-xs font-mono font-extrabold text-[#FF3B5C]">
-          💀 {totalDamageCount.toLocaleString()} DAMAGE
+          🔥 {totalDamageCount.toLocaleString()} PTS
         </span>
       </div>
 

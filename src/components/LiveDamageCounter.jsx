@@ -32,8 +32,8 @@ export function LiveDamageCounter({ totalDamage = 0 }) {
 
       {/* Title Header */}
       <div className="flex items-center justify-center gap-1.5 font-mono text-xs font-extrabold tracking-widest text-slate-400 uppercase">
-        <Skull className="w-4 h-4 text-rose-400" />
-        <span>TOTAL DAMAGE</span>
+        <Flame className="w-4 h-4 text-rose-400" />
+        <span>TOTAL POINTS</span>
       </div>
 
       {/* Main Big Counter Display */}
@@ -46,12 +46,12 @@ export function LiveDamageCounter({ totalDamage = 0 }) {
           {totalDamage.toLocaleString()}
         </span>
 
-        {/* Floating +50 DAMAGE Badge */}
+        {/* Floating +50 POINTS Badge */}
         {floatingDamage && (
           <div className="absolute -top-7 right-0 left-0 flex justify-center pointer-events-none animate-float-up">
             <span className="px-2.5 py-0.5 rounded-full bg-[#FF3B5C] text-white font-mono font-extrabold text-xs shadow-lg shadow-rose-500/40 border border-white/20 flex items-center gap-1">
               <Zap className="w-3 h-3 text-amber-300" />
-              <span>+{floatingDamage.diff} DAMAGE</span>
+              <span>+{floatingDamage.diff} POINTS</span>
             </span>
           </div>
         )}

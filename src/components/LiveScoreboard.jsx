@@ -108,7 +108,7 @@ export function LiveScoreboard({ ookuEvents = [], members = [], messages = [] })
           <div className="text-right shrink-0">
             <div className={`text-xs sm:text-sm font-mono font-extrabold flex items-center justify-end gap-1 ${isExited ? 'text-slate-400' : 'text-rose-400'}`}>
               <Flame className="w-3.5 h-3.5 text-rose-500" />
-              <span>{player.damage}</span>
+              <span>{player.damage} PTS</span>
             </div>
 
             {player.bestCombo >= 2 && (
@@ -137,9 +137,9 @@ export function LiveScoreboard({ ookuEvents = [], members = [], messages = [] })
 
       {/* Header */}
       <div className="flex items-center justify-between px-1">
-        <div className="flex items-center gap-2 font-mono text-xs font-extrabold tracking-wider text-purple-300 uppercase">
+        <div className="flex items-center gap-2 font-mono text-xs font-black tracking-wider text-purple-300 uppercase">
           <Trophy className="w-4 h-4 text-amber-400" />
-          <span>LIVE OOKU LEADERBOARD</span>
+          <span>🏆 LIVE SCORE</span>
         </div>
         <span className="text-[10px] font-mono text-slate-400 bg-[#19192B] px-2 py-0.5 rounded-full border border-purple-500/20">
           {activePlayers.length} ONLINE • {exitedPlayers.length} EXITED

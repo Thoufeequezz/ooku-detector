@@ -34,7 +34,7 @@ export function ChatHeader({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-base sm:text-lg font-extrabold font-mono tracking-tight text-white flex items-center gap-1.5">
-              <span>🔥 OOKU DETECTION</span>
+              <span>💀 OOKU DETECTOR</span>
             </h1>
 
             {/* Room Code Quick Copy Badge */}
@@ -68,12 +68,12 @@ export function ChatHeader({
         </div>
       </div>
 
-      {/* Right side controls: Live Damage, Voice Control + Three Dots Menu */}
+      {/* Right side controls: Live Points, Voice Control + Three Dots Menu */}
       <div className="flex items-center gap-2">
-        {/* Compact Damage Counter for Mobile / Header */}
+        {/* Compact Points Counter for Mobile / Header */}
         <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#19192B] border border-rose-500/30 text-xs font-mono text-rose-300 font-bold">
-          <Skull className="w-3.5 h-3.5 text-rose-400" />
-          <span>💀 {totalDamage.toLocaleString()} DAMAGE</span>
+          <Flame className="w-3.5 h-3.5 text-rose-400" />
+          <span>🔥 {totalDamage.toLocaleString()} PTS</span>
         </div>
 
         <RoomAudioControl />

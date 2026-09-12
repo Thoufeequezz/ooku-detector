@@ -50,7 +50,7 @@ export function MessageInput({
 
           <div className="flex items-center justify-center gap-3 text-xs sm:text-sm font-mono pt-1">
             <span className="px-3 py-1.5 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-300 font-bold shadow-md">
-              🔥 {userDamage} DAMAGE
+              🔥 {userDamage} POINTS
             </span>
             <span className="px-3 py-1.5 rounded-xl bg-amber-950/70 border border-amber-500/40 text-amber-300 font-bold shadow-md">
               🏆 {userRank}

@@ -45,13 +45,13 @@ export function Home() {
         </div>
 
         {/* Headings */}
-        <div className="space-y-4">
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight font-mono text-white drop-shadow-md">
-            OOKU DETECTION
+        <div className="space-y-3">
+          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight font-mono text-white drop-shadow-md">
+            💀 OOKU DETECTOR
           </h1>
 
           <h3 className="text-xl sm:text-3xl font-extrabold text-[#EC4899] font-mono tracking-tight">
-            “Chat normally. AI will judge you. 💀”
+            Chat normally. AI will judge you.
           </h3>
         </div>
 
@@ -59,7 +59,7 @@ export function Home() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 max-w-lg mx-auto">
           <button
             onClick={() => navigate('/create')}
-            className="w-full sm:w-1/2 h-[64px] rounded-2xl gradient-purple-pink hover:opacity-95 text-white font-mono font-extrabold text-lg sm:text-xl flex items-center justify-center gap-3 shadow-xl shadow-purple-600/30 hover:shadow-purple-600/50 hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer border border-white/20"
+            className="w-full sm:w-1/2 h-[64px] rounded-2xl gradient-purple-pink hover:opacity-95 text-white font-mono font-extrabold text-lg sm:text-xl flex items-center justify-center gap-3 shadow-xl shadow-purple-600/30 hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer border border-white/20"
           >
             <PlusCircle className="w-6 h-6" />
             <span>🔥 CREATE ROOM</span>
@@ -67,32 +67,16 @@ export function Home() {
 
           <button
             onClick={() => navigate('/join')}
-            className="w-full sm:w-1/2 h-[64px] rounded-2xl bg-[#11111F] hover:bg-[#19192B] text-cyan-300 font-mono font-extrabold text-lg sm:text-xl flex items-center justify-center gap-3 border-2 border-cyan-500/40 hover:border-cyan-400 shadow-xl shadow-cyan-500/10 hover:shadow-cyan-500/20 hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
+            className="w-full sm:w-1/2 h-[64px] rounded-2xl bg-[#11111F] hover:bg-[#19192B] text-cyan-300 font-mono font-extrabold text-lg sm:text-xl flex items-center justify-center gap-3 border-2 border-cyan-500/40 hover:border-cyan-400 shadow-xl shadow-cyan-500/10 hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
           >
             <LogIn className="w-6 h-6" />
             <span>👀 JOIN ROOM</span>
           </button>
         </div>
 
-        {/* Rotating Comedy Line */}
-        <div className="space-y-3 pt-2">
-          <div className="h-9 flex items-center justify-center">
-            <span className="text-xs sm:text-sm font-mono text-cyan-300 bg-[#11111F] px-4 py-1.5 rounded-full border border-purple-500/30 transition-all duration-300 animate-fadeIn shadow-lg">
-              ✨ "{ROTATING_LINES[lineIndex]}"
-            </span>
-          </div>
-        </div>
-
-        {/* Preloaded Demo Room Launcher */}
-        <div className="pt-6 border-t border-purple-500/20 max-w-sm mx-auto">
-          <button
-            onClick={() => navigate('/chat/KMEA482?demo=true')}
-            className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono text-cyan-400 hover:text-cyan-300 underline cursor-pointer transition-colors p-2"
-          >
-            <Play className="w-4 h-4 fill-cyan-400" />
-            <span>Launch Preloaded Demo Room 🎭</span>
-          </button>
-        </div>
+        <p className="text-xs sm:text-sm font-mono text-purple-300 pt-2">
+          Roast your friends. Let AI keep score.
+        </p>
       </main>
 
       {/* Footer */}

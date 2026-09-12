@@ -45,10 +45,10 @@ export function Report() {
   const handleShareReport = () => {
     if (!playerData) return;
     const ookuKing = playerData.allPlayers[0] ? playerData.allPlayers[0].name : 'None';
-    const shareText = `OOKU DETECTION SCOREBOARD 💀\nRoom: ${roomCode}\nTotal Damage: ${playerData.totalDamage} DMG\n🥇 #1 Winner: ${ookuKing}\nDiagnosis: ${diagnosis?.status || 'SEVERE OOKU SYNDROME'}\nTested on Friendship OS!`;
+    const shareText = `OOKU DETECTOR SCOREBOARD 💀\nRoom: ${roomCode}\nTotal Points: ${playerData.totalDamage} PTS\n🥇 #1 Winner: ${ookuKing}\nDiagnosis: ${diagnosis?.status || 'SEVERE OOKU SYNDROME'}\nTested on Friendship OS!`;
 
     if (navigator.share) {
-      navigator.share({ title: 'Ooku Detection Scoreboard', text: shareText }).catch(() => {});
+      navigator.share({ title: 'Ooku Detector Scoreboard', text: shareText }).catch(() => {});
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(shareText);
       setCopiedShare(true);
@@ -61,7 +61,7 @@ export function Report() {
       <div className="min-h-screen bg-[#080812] text-[#F8FAFC] flex items-center justify-center font-mono p-6">
         <div className="flex items-center gap-3 text-lg text-purple-300">
           <Flame className="w-8 h-8 text-[#FF3B5C] animate-spin" />
-          <span>Calculating Final Ooku Scoreboard... 💀</span>
+          <span>Calculating Final Scoreboard... 💀</span>
         </div>
       </div>
     );
@@ -89,7 +89,7 @@ export function Report() {
           </h3>
 
           <p className="text-xs sm:text-sm font-mono text-purple-300">
-            Room Code: <span className="text-cyan-300 font-bold">{roomCode}</span> • Total Damage: <span className="text-rose-400 font-bold">🔥 {playerData.totalDamage} DMG</span>
+            Room Code: <span className="text-cyan-300 font-bold">{roomCode}</span> • Total Points: <span className="text-rose-400 font-bold">🔥 {playerData.totalDamage} PTS</span>
           </p>
         </div>
 
@@ -160,10 +160,10 @@ export function Report() {
                     </div>
                   </div>
 
-                  {/* Damage Score */}
+                  {/* Points Score */}
                   <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-0 border-purple-500/10">
                     <div className="text-right">
-                      <span className="text-xs font-mono text-slate-400 block">Total Damage</span>
+                      <span className="text-xs font-mono text-slate-400 block">Total Points</span>
                       <span className="text-xl sm:text-2xl font-black font-mono text-rose-400 flex items-center gap-1 justify-end">
                         <Flame className="w-5 h-5 text-rose-500" /> {player.damage}
                       </span>
@@ -241,7 +241,7 @@ export function Report() {
               </div>
 
               <div className="p-3 rounded-2xl bg-[#19192B] border border-amber-500/20">
-                <span className="block text-xs font-mono text-slate-400">Total Damage</span>
+                <span className="block text-xs font-mono text-slate-400">Total Points</span>
                 <span className="text-lg font-black font-mono text-amber-300">{diagnosis?.totalDamage || 0}</span>
               </div>
             </div>
@@ -260,8 +260,8 @@ export function Report() {
               onClick={() => navigate('/')}
               className="w-full sm:w-2/3 h-[60px] rounded-2xl gradient-purple-pink hover:opacity-95 text-white font-mono font-extrabold text-lg flex items-center justify-center gap-3 shadow-xl shadow-purple-600/30 active:scale-95 transition-all cursor-pointer border border-white/20"
             >
-              <RefreshCw className="w-5 h-5" />
-              <span>START ANOTHER CHAT</span>
+              <Flame className="w-5 h-5" />
+              <span>🔥 CREATE NEW ROOM</span>
             </button>
 
             <button
