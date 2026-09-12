@@ -144,6 +144,8 @@ For Software:
 * AI Ooku detection demonstration
 * Gemini text-to-speech demonstration
 * Final scoreboard demonstration
+  
+https://drive.google.com/file/d/1C0p0vpRTEiHjaldduSs8z2Y_nJ9ja-Eh/view?usp=sharing
 
 ## Team Contributions
 
