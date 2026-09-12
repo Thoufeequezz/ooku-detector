@@ -148,9 +148,8 @@ For Software:
 ## Team Contributions
 
 * **Muhammad Thoufeeq S:** Project concept, UI/UX design, React frontend, multiplayer chat flow, Supabase integration, AI integration and overall development.
-* **[Member 2]:** [Specific contributions]
-* **[Member 3]:** [Specific contributions]
-* **[Member 4]:** [Specific contributions]
+* **Abhijith ML:** Idea Suggestions, Back Support
+
 
 ---
 
