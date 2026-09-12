@@ -196,15 +196,27 @@ export function Chat() {
   }, [messages, ookuEvents, refereeNote, isLoading]);
 
   const handleSendMessage = async (text) => {
+    const tempId = `temp_${Date.now()}_${Math.random().toString(36).substring(2,7)}`;
+    const tempMsg = {
+      id: tempId,
+      room_code: roomCode,
+      sender_name: sessionInfo.name,
+      message: text,
+      created_at: new Date().toISOString()
+    };
+
+    setMessages((prev) => [...prev, tempMsg]);
+    scrollToBottom(true);
+
     const newMsg = await sendMessage(roomCode, sessionInfo.name, text);
 
     if (newMsg) {
       setMessages((prev) => {
-        if (isDuplicate(prev, newMsg)) return prev;
-        const next = [...prev, newMsg];
+        const filtered = prev.filter(m => m.id !== tempId);
+        if (isDuplicate(filtered, newMsg)) return filtered;
+        const next = [...filtered, newMsg];
         return next.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0));
       });
-      scrollToBottom(true);
 
       // Queue locally on sender device as well
       audioQueue.queueSpeech(newMsg, null, roomCode);

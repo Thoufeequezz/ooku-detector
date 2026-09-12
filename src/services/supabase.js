@@ -204,17 +204,33 @@ export async function sendMessage(roomCode, senderName, messageText) {
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data: room } = await supabase
+      let roomId = null;
+      const { data: existingRoom } = await supabase
         .from('rooms')
         .select('id')
         .eq('room_code', formattedCode)
-        .single();
+        .maybeSingle();
 
-      if (room) {
-        const { data: msg } = await supabase
+      if (existingRoom) {
+        roomId = existingRoom.id;
+      } else {
+        const { data: newRoom } = await supabase
+          .from('rooms')
+          .insert([{
+            room_code: formattedCode,
+            created_by_participant: participantId,
+            is_active: true
+          }])
+          .select()
+          .single();
+        if (newRoom) roomId = newRoom.id;
+      }
+
+      if (roomId) {
+        const { data: msg, error: msgErr } = await supabase
           .from('messages')
           .insert([{
-            room_id: room.id,
+            room_id: roomId,
             participant_id: participantId,
             sender_name: senderName,
             message: messageText
@@ -222,10 +238,14 @@ export async function sendMessage(roomCode, senderName, messageText) {
           .select()
           .single();
 
-        return msg;
+        if (msgErr) {
+          console.warn("Supabase insert message error:", msgErr);
+        } else if (msg) {
+          return msg;
+        }
       }
     } catch (err) {
-      console.warn("Supabase sendMessage error:", err);
+      console.warn("Supabase sendMessage error, falling back:", err);
     }
   }
 
@@ -263,17 +283,22 @@ export async function recordOokuEvent(roomCode, eventData) {
 
   if (isSupabaseConfigured && supabase) {
     try {
-      const { data: room } = await supabase
+      let roomId = null;
+      const { data: existingRoom } = await supabase
         .from('rooms')
         .select('id')
         .eq('room_code', formattedCode)
-        .single();
+        .maybeSingle();
 
-      if (room) {
-        await supabase
+      if (existingRoom) {
+        roomId = existingRoom.id;
+      }
+
+      if (roomId) {
+        const { data: event, error: eventErr } = await supabase
           .from('ooku_events')
           .insert([{
-            room_id: room.id,
+            room_id: roomId,
             message_id: eventData.message_id || null,
             participant_id: participantId,
             sender_name: eventData.speaker,
@@ -282,7 +307,20 @@ export async function recordOokuEvent(roomCode, eventData) {
             intensity: eventData.intensity,
             confidence: confidence,
             damage: damage
-          }]);
+          }])
+          .select()
+          .single();
+
+        if (eventErr) {
+          console.warn("Supabase recordOokuEvent insert error:", eventErr);
+        } else if (event) {
+          return {
+            ...event,
+            speaker: event.sender_name,
+            target: event.target_name,
+            isOoku: true
+          };
+        }
       }
     } catch (err) {
       console.warn("Supabase recordOokuEvent error:", err);
@@ -392,36 +430,31 @@ export function subscribeToRoom(roomCode, roomId, onMessage, onMemberJoin, onEve
 
   if (isSupabaseConfigured && supabase) {
     const channelName = roomId ? `room_channel_${roomId}` : `room_channel_${formattedCode}`;
-    const roomFilter = roomId ? `room_id=eq.${roomId}` : undefined;
+    const msgOpts = { event: 'INSERT', schema: 'public', table: 'messages' };
+    const memberOpts = { event: 'INSERT', schema: 'public', table: 'room_members' };
+    const eventOpts = { event: 'INSERT', schema: 'public', table: 'ooku_events' };
+    const roomOpts = { event: 'UPDATE', schema: 'public', table: 'rooms' };
+
+    if (roomId) {
+      msgOpts.filter = `room_id=eq.${roomId}`;
+      memberOpts.filter = `room_id=eq.${roomId}`;
+      eventOpts.filter = `room_id=eq.${roomId}`;
+      roomOpts.filter = `id=eq.${roomId}`;
+    }
 
     channel = supabase
       .channel(channelName)
-      .on('postgres_changes', { 
-        event: 'INSERT', 
-        schema: 'public', 
-        table: 'messages',
-        filter: roomFilter
-      }, payload => {
+      .on('postgres_changes', msgOpts, payload => {
         if (!roomId || payload.new.room_id === roomId) {
           if (onMessage) onMessage(payload.new);
         }
       })
-      .on('postgres_changes', { 
-        event: 'INSERT', 
-        schema: 'public', 
-        table: 'room_members',
-        filter: roomFilter
-      }, payload => {
+      .on('postgres_changes', memberOpts, payload => {
         if (!roomId || payload.new.room_id === roomId) {
           if (onMemberJoin) onMemberJoin(payload.new);
         }
       })
-      .on('postgres_changes', { 
-        event: 'INSERT', 
-        schema: 'public', 
-        table: 'ooku_events',
-        filter: roomFilter
-      }, payload => {
+      .on('postgres_changes', eventOpts, payload => {
         if (!roomId || payload.new.room_id === roomId) {
           if (onEvent) onEvent({ 
             ...payload.new, 
@@ -431,12 +464,7 @@ export function subscribeToRoom(roomCode, roomId, onMessage, onMemberJoin, onEve
           });
         }
       })
-      .on('postgres_changes', { 
-        event: 'UPDATE', 
-        schema: 'public', 
-        table: 'rooms',
-        filter: roomId ? `id=eq.${roomId}` : `room_code=eq.${formattedCode}`
-      }, payload => {
+      .on('postgres_changes', roomOpts, payload => {
         if (!payload.new.is_active) {
           if (onRoomEnd) onRoomEnd();
         }
