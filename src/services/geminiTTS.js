@@ -49,13 +49,16 @@ function base64ToUint8Array(base64) {
   return bytes;
 }
 
+let activeUtteranceRef = null;
+
 /**
  * Converts 16-bit PCM Little Endian byte array into Float32Array normalized between [-1.0, 1.0]
  */
 function pcm16ToFloat32(bytes) {
   const sampleCount = Math.floor(bytes.length / 2);
   const floats = new Float32Array(sampleCount);
-  const dataView = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+  const dataView = new DataView(buffer);
 
   for (let i = 0; i < sampleCount; i++) {
     const int16 = dataView.getInt16(i * 2, true); // little-endian
@@ -229,9 +232,16 @@ export function playFallbackSpeech(text, onEnded = null) {
   }
 
   try {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 1.05;
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
+    }
+    
+    // Add trailing period if missing to ensure complete final word pronunciation
+    const paddedText = text.trim() + (/[.!?]$/.test(text.trim()) ? '' : '.');
+    const utterance = new SpeechSynthesisUtterance(paddedText);
+    activeUtteranceRef = utterance; // Prevent garbage collection mid-speech
+
+    utterance.rate = 0.95; // Slightly calmer pace for full word pronunciation
     utterance.pitch = 1.0;
 
     const voices = window.speechSynthesis.getVoices() || [];
@@ -240,16 +250,22 @@ export function playFallbackSpeech(text, onEnded = null) {
       utterance.voice = inVoice;
     }
 
-    utterance.onend = () => {
-      if (onEnded) onEnded();
+    let finished = false;
+    const finishSpeech = () => {
+      if (!finished) {
+        finished = true;
+        activeUtteranceRef = null;
+        if (onEnded) onEnded();
+      }
     };
-    utterance.onerror = () => {
-      if (onEnded) onEnded();
-    };
+
+    utterance.onend = finishSpeech;
+    utterance.onerror = finishSpeech;
 
     window.speechSynthesis.speak(utterance);
   } catch (e) {
     console.warn('[GeminiTTS] Browser fallback error:', e);
+    activeUtteranceRef = null;
     if (onEnded) onEnded();
   }
 }

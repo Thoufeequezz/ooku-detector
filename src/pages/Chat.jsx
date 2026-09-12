@@ -105,6 +105,7 @@ export function Chat() {
 
   useEffect(() => {
     let unsubscribe = () => {};
+    let pollInterval = null;
 
     async function initRoom() {
       setIsLoading(true);
@@ -174,6 +175,51 @@ export function Chat() {
             navigate(`/report/${roomCode}`);
           }
         );
+
+        // 2.5s Auto-sync polling loop so refresh is NEVER required on mobile networks
+        pollInterval = setInterval(async () => {
+          try {
+            const latest = await fetchRoomDetails(roomCode);
+            if (latest.messages && latest.messages.length > 0) {
+              setMessages((prev) => {
+                let updated = false;
+                const next = [...prev];
+                latest.messages.forEach((m) => {
+                  if (!isDuplicate(next, m)) {
+                    next.push(m);
+                    updated = true;
+                    audioQueue.queueSpeech(m, latest.roomId, roomCode);
+                  }
+                });
+                return updated ? next.sort((a, b) => new Date(a.created_at || 0) - new Date(b.created_at || 0)) : prev;
+              });
+            }
+            if (latest.ookuEvents && latest.ookuEvents.length > 0) {
+              setOokuEvents((prev) => {
+                let updated = false;
+                const next = [...prev];
+                latest.ookuEvents.forEach((e) => {
+                  if (!next.some((existing) => existing.id === e.id)) {
+                    next.unshift(e);
+                    updated = true;
+                    audioQueue.queueOokuReaction(e, latest.roomId, roomCode);
+                  }
+                });
+                return updated ? next : prev;
+              });
+            }
+            if (latest.members && latest.members.length > 0) {
+              const names = latest.members.map(m => typeof m === 'string' ? m : m.name);
+              setMembers((prev) => {
+                const combined = Array.from(new Set([...prev, ...names]));
+                return combined.length !== prev.length ? combined : prev;
+              });
+            }
+          } catch (e) {
+            // silent catch
+          }
+        }, 2500);
+
       } catch (err) {
         console.warn("Failed to load room details:", err);
       } finally {
@@ -185,6 +231,7 @@ export function Chat() {
 
     return () => {
       unsubscribe();
+      if (pollInterval) clearInterval(pollInterval);
       audioQueue.clearSpeechQueue();
     };
   }, [roomCode, isExplicitDemo]);
