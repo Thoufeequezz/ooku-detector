@@ -1,626 +1,245 @@
 # 💀 OOKU DETECTOR
 
-### Chat normally. AI will judge you.
+> **Chat normally. AI will judge you. 💀🔥**
 
-**OOKU DETECTOR** is a real-time multiplayer chat application that uses AI to detect playful roasting, sarcasm, and counter-roasting in Malayalam, Manglish, and English — then turns every roast into a live comedy event.
+## 👥 Team Members
 
-> **No login. No profiles. No complicated setup. Just enter a room, chat with your friends, and let AI judge the damage. 💀**
-
----
-
-## 🎯 What is Ooku?
-
-In Kerala college culture, **"Ooku"** is playful teasing, roasting, or making fun of your friends.
-
-The problem?
-
-A normal chat app doesn't know when a message is just a normal conversation and when someone has absolutely destroyed their friend. 😂
-
-**OOKU DETECTOR does.**
-
-It watches the conversation, understands the context, detects Ooku using AI, calculates the damage, and broadcasts the reaction to everyone in the room.
+* **Muhammad Thoufeeq S** — TinkerHub App ID: `kunInd4lsd`
+* **Abhijith ML** — TinkerHub App ID: `8anfo2uphn`
 
 ---
 
-# 🔥 How It Works
+## 🎯 Project Description
 
-```text
-┌──────────────────────┐
-│     CREATE ROOM      │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────┐
-│     SHARE CODE       │
-│       KMEA482        │
-└──────────┬───────────┘
-           │
-           ▼
-┌──────────────────────────────┐
-│       MULTIPLAYER CHAT       │
-│                              │
-│  Adil      Suhail   Thoufeek │
-└──────────────┬───────────────┘
-               │
-               ▼
-       ┌───────────────┐
-       │   GEMINI AI   │
-       │ OOKU DETECTOR │
-       └───────┬───────┘
-               │
-        ┌──────┴──────┐
-        ▼             ▼
-     NORMAL         OOKU 💀
-                      │
-                      ▼
-              ┌──────────────┐
-              │ DAMAGE SCORE │
-              └──────┬───────┘
-                     │
-            ┌────────┴────────┐
-            ▼                 ▼
-       💥 ANIMATION       🏆 LEADERBOARD
-            │
-            ▼
-       🔊 OOKU AUDIO
-```
+### What is OOKU DETECTOR?
+
+**OOKU DETECTOR** is a real-time multiplayer group chat where your friends can casually chat, roast each other, and let AI decide who just delivered an **Ooku**. 💀
+
+Create a room, share the room code, invite your friends, and start chatting.
+
+The AI silently watches the conversation and detects playful roasting, sarcasm, teasing, and counter-attacks.
+
+When an Ooku is detected:
+
+**💬 Message → 🤖 AI Detection → 💀 Ooku Reaction → 🔥 Points → 😂 Chaos**
+
+The funniest part?
+
+### It's completely useless. And that's the point. 😂
+
+Nobody actually needs an AI system to determine whether their friend got roasted.
+
+But now we have one.
 
 ---
 
-# ✨ Key Features
+## 😂 Why Is It Wonderfully Useless?
 
-### 💬 Real-Time Multiplayer
+Because instead of solving an important problem like:
 
-Create a room and share the room code with your friends.
+* Climate change 🌍
+* Traffic 🚗
+* Healthcare 🏥
+* Education 📚
 
-Everyone inside the same room sees:
+We decided to solve the world's most unnecessary problem:
 
-- Every message
-- New participants
-- Ooku detections
-- Damage
-- Combos
-- Leaderboard changes
-- Audio reactions
+> **"Was that actually an Ooku?" 💀**
 
-Powered by **Supabase Realtime**.
+The AI becomes the referee of your friend group's arguments.
 
----
+No serious productivity.
 
-### 🤖 AI-Powered Ooku Detection
+No life improvement.
 
-The AI classifies messages into:
-
-```text
-NORMAL
-OOKU
-COUNTER_OOKU
-```
-
-It considers:
-
-- Conversation context
-- Malayalam
-- Manglish
-- English
-- Slang
-- Sarcasm
-- Teasing
-- Roasting
-- Counter-roasting
-- Intensity
-
-It does **not** simply detect bad words.
-
-For example:
-
-```text
-"eda evideya?"
-
-→ NORMAL
-```
-
-But:
-
-```text
-"ninte coding kandittu calculator polum resign cheyyum 💀"
-
-→ OOKU
-```
-
-And:
-
-```text
-"nee thanne alle innale fail aayath 😂"
-
-→ COUNTER_OOKU
-```
+Just friends chatting and an AI judging the damage.
 
 ---
 
-# 🧠 Context-Aware Detection
+## ✨ Features
 
-One of the important design decisions is that **not every insult is Ooku**.
-
-The system uses the surrounding conversation to understand intent.
-
-### Example
-
-```text
-Adil:
-Njan innu exam pass aakum 😎
-
-Thoufeek:
-Nee padichittundo?
-
-Adil:
-Youtube kandirunnu 😂
-
-Thoufeek:
-Aah best preparation aanu 💀
-```
-
-The final message is understood in context as playful sarcasm.
+* 💬 Real-time multiplayer chat
+* 🔗 Create and join rooms using a simple room code
+* 👥 Multiple friends in the same room
+* 🤖 Automatic AI-powered Ooku detection
+* 🇮🇳 Understands Malayalam, Manglish and English
+* 🔥 Detects normal Ooku and counter-Ooku
+* 💥 Ooku intensity and points
+* 🔥 Combo system
+* 🏆 Live leaderboard
+* 🔊 AI-powered text-to-speech
+* 💀 Ooku reaction sound effects
+* 😂 Funny animations and reactions
+* 🚪 Individual player exit system
+* 🏁 Automatic final scoreboard
+* 📱 Mobile-friendly interface
+* ⚡ Real-time updates without refreshing
 
 ---
 
-# 💀 Ooku Damage System
-
-Every detected Ooku receives an AI-generated intensity score from **1–10**.
-
-| Intensity | Damage | Reaction |
-|---|---:|---|
-| 1–3 | +10 | 😏 LIGHT OOKU |
-| 4–6 | +25 | 🔥 DIRECT HIT |
-| 7–8 | +50 | 💀 HEAVY OOKU |
-| 9–10 | +100 | ☠️ CRITICAL OOKU |
-
-Counter attacks can receive a bonus.
+## 🧠 How It Works
 
 ```text
-🔥 COUNTER ATTACK
-
-+15 BONUS DAMAGE
+👤 User sends message
+        ↓
+💬 Message appears instantly
+        ↓
+🤖 AI analyzes the message + conversation context
+        ↓
+      ┌───────────────┐
+      │               │
+   NORMAL          OOKU
+      │               │
+   Nothing       💀 DETECTED
+                      ↓
+                 🔥 Points
+                      ↓
+                 💥 Reaction
+                      ↓
+                🏆 Leaderboard
 ```
+
+The AI classifies messages as:
+
+* `NORMAL`
+* `OOKU`
+* `COUNTER_OOKU`
+
+The application then calculates the points and updates the leaderboard in real time.
 
 ---
 
-# 🔥 Combo System
+## 🔥 Ooku Scoring
 
-Repeated successful Ooku attacks create combos.
+| Intensity   | Points |
+| ----------- | -----: |
+| 😏 Light    |    +10 |
+| 😂 Medium   |    +25 |
+| 💀 Heavy    |    +50 |
+| ☠️ Critical |   +100 |
 
-```text
-🔥 OOKU COMBO x2
+Counter-Ooku attacks receive an additional bonus.
 
-🔥 OOKU COMBO x3
+The more you roast, the more points you collect.
 
-🔥 OOKU COMBO x5
+The more points you collect...
 
-🔥🔥🔥 OOKU COMBO x10
-```
-
-High combos trigger additional visual effects.
-
-```text
-💀 FRIENDSHIP CRITICAL
-```
+**the more uselessly competitive the chat becomes. 💀**
 
 ---
 
-# 🏆 Live Ooku Leaderboard
+## 🛠️ Tech Stack
 
-The room has a live leaderboard showing who is doing the most damage.
+### Frontend
 
-```text
-💀 LIVE OOKU LEADERBOARD
+* React
+* Vite
+* JavaScript
+* CSS
+* Framer Motion
 
-🥇 Adil        450 DMG   🔥 x5
-🥈 Thoufeek    325 DMG   💀 x3
-🥉 Suhail      180 DMG   😂 x2
-4️⃣ Farhan       75 DMG   😏 x1
-```
+### Backend / Database
 
-The leaderboard updates instantly whenever an Ooku event occurs.
+* Supabase
+* PostgreSQL
+* Supabase Realtime
+* Supabase Edge Functions
 
-Rank changes can trigger animations and celebration effects.
+### AI
+
+* Google Gemini API
+* Gemini TTS
+* AI-based contextual Ooku classification
+
+### Other
+
+* Git
+* GitHub
+* PWA support
+* Responsive Web Design
 
 ---
 
-# 🔊 Gemini Voice
+## 🔊 AI Voice
 
-OOKU DETECTOR can read chat messages aloud using **Gemini Text-to-Speech**.
+Every message can be read aloud using **Gemini Text-to-Speech**.
 
-### Important:
+The AI reads **only the original message**.
 
-Gemini reads **only the original message**.
+It doesn't add explanations.
 
-It does not add:
+It doesn't rewrite the message.
 
-- Names
-- Commentary
-- Reactions
-- Explanations
-- Translations
+It simply reads what your friend typed.
 
 Example:
 
 ```text
-User message:
+Friend:
+"eda nee enthina ingane padikkunne 😂"
 
-"eda nee evideya"
+        ↓
+
+Gemini TTS
+
+        ↓
+
+🔊 Reads the original message
 ```
 
-Gemini voice reads the same message.
-
-If the message is detected as Ooku, the Ooku reaction is handled separately.
-
-```text
-MESSAGE
-   ↓
-GEMINI TTS
-   ↓
-ORIGINAL MESSAGE AUDIO
-   ↓
-OOKU DETECTION
-   ↓
-IF OOKU → REACTION AUDIO
-```
+If the message is detected as Ooku, a separate reaction sound can play.
 
 ---
 
-# 🔊 Ooku Reaction Audio
+## 💀 Example
 
-Detected Ooku events can trigger separate comedy audio effects.
+### Normal
 
-Different intensity levels can have different sounds:
+> "Bro where are you?"
 
-```text
-LIGHT
-😏 light reaction
-
-MEDIUM
-🔥 direct hit
-
-HEAVY
-💀 heavy damage
-
-CRITICAL
-☠️ critical reaction
-
-COUNTER
-🔥 counter attack
-```
-
-Each client can play the reaction locally while only the Ooku event itself is synchronized through Supabase.
+Nothing happens.
 
 ---
-
-# 😂 Comedy-First UI
-
-The interface is designed to feel more like a **game + meme culture + chat app** than a traditional SaaS product.
-
-### Visual Style
-
-```text
-Background     #080812
-Surface        #11111F
-Secondary      #19192B
-
-Purple        #8B5CF6
-Pink          #EC4899
-Cyan          #22D3EE
-
-Damage        #FF3B5C
-Online        #22C55E
-
-Text          #F8FAFC
-Muted         #94A3B8
-```
-
----
-
-# 💥 Real-Time Animations
-
-Normal messages appear smoothly.
-
-Ooku events are much more dramatic.
-
-### Normal Message
-
-```text
-Fade
-  ↓
-Slide
-  ↓
-Appear
-```
 
 ### Ooku
 
-```text
-Message Shake
-      ↓
-Impact Flash
-      ↓
-Scale Animation
-      ↓
-💀 😂 🔥 💥 Floating Emojis
-      ↓
-+50 DAMAGE
-      ↓
-Leaderboard Update
-```
+> "Ninte coding kandittu calculator polum resign cheyyum 💀"
 
-High-intensity Ooku can trigger a larger screen reaction.
+**AI:**
 
-```text
-💀💥 OOKU DETECTED 💥💀
-
-CRITICAL OOKU
-
-+100 DAMAGE
-
-☠️ FRIENDSHIP CRITICAL
-```
+> 💀 OOKU DETECTED
+> 🔥 DIRECT HIT
+> **+50 POINTS**
 
 ---
 
-# 👀 Funny Typing Indicators
+### Counter Ooku
 
-Instead of the boring:
+> "Nee enne roast cheyyan vannathaano? Ninte attendance nokkeda 😂"
 
-> "Adil is typing..."
+**AI:**
 
-OOKU DETECTOR can randomly display:
-
-```text
-Adil is cooking... 👀
-
-Adil is loading a comeback...
-
-Adil is choosing violence...
-
-Adil is typing something he'll regret...
-
-Adil has entered attack mode...
-
-Adil is thinking... dangerous.
-```
+> 🔥 COUNTER ATTACK
+> **+65 POINTS**
 
 ---
 
-# 🤨 AI Referee
+## 🚀 Setup / Execution
 
-Small random system messages make the room feel alive.
-
-```text
-👀 AI referee is watching...
-
-📝 Interesting choice of words.
-
-🤨 We need to investigate this friendship.
-
-🔥 Things are escalating.
-
-💀 Nobody asked for that.
-```
-
----
-
-# 📊 End-of-Chat Report
-
-When the room creator ends the session, the application generates a comedy report.
-
-Possible awards:
-
-```text
-👑 OOKU KING
-
-💀 MOST ROASTED
-
-🔥 BIGGEST HIT
-
-😂 COMEBACK KING
-
-☠️ FRIENDSHIP DESTROYER
-```
-
-### Friendship Diagnosis
-
-```text
-YOUR FRIENDSHIP DIAGNOSIS
-
-💀 SEVERE OOKU SYNDROME
-
-You insult each other constantly,
-counter-attack immediately,
-and somehow still call each other friends.
-
-100% fictional diagnosis.
-We are not doctors. 😂
-```
-
----
-
-# 🏗️ Technology Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React |
-| Build Tool | Vite |
-| Styling | CSS |
-| Animation | Framer Motion / CSS |
-| Backend | Supabase |
-| Database | PostgreSQL |
-| Realtime | Supabase Realtime |
-| Server Functions | Supabase Edge Functions |
-| AI | Google Gemini |
-| TTS | Gemini TTS |
-| Deployment | Vercel |
-| Mobile | Responsive Web / PWA |
-
----
-
-# 🗄️ Database Architecture
-
-## `rooms`
-
-Stores chat rooms.
-
-```text
-id
-room_code
-created_by_participant
-created_at
-is_active
-ended_at
-```
-
-## `room_members`
-
-Tracks temporary participants.
-
-```text
-id
-room_id
-participant_id
-name
-joined_at
-last_seen_at
-is_active
-```
-
-## `messages`
-
-Stores chat messages.
-
-```text
-id
-room_id
-participant_id
-sender_name
-message
-created_at
-```
-
-## `ooku_events`
-
-Stores AI detection results.
-
-```text
-id
-room_id
-message_id
-participant_id
-sender_name
-target_name
-type
-intensity
-confidence
-damage
-created_at
-```
-
----
-
-# 🔐 Security Architecture
-
-Gemini API credentials should never be exposed in the browser.
-
-The architecture is:
-
-```text
-                 FRONTEND
-                    │
-                    ▼
-             SUPABASE EDGE
-                FUNCTION
-                    │
-                    ▼
-              GEMINI API
-```
-
-The frontend only receives the required result.
-
-### Never commit:
-
-```text
-GEMINI_API_KEY
-```
-
-to GitHub.
-
----
-
-# 📁 Project Structure
-
-```text
-ooku-detector/
-│
-├── public/
-│   ├── sounds/
-│   │   └── ooku/
-│   │       ├── light-1.mp3
-│   │       ├── medium-1.mp3
-│   │       ├── heavy-1.mp3
-│   │       └── critical-1.mp3
-│   │
-│   └── icons/
-│
-├── src/
-│   ├── components/
-│   │   ├── ChatRoom.jsx
-│   │   ├── MessageBubble.jsx
-│   │   ├── OokuOverlay.jsx
-│   │   ├── Leaderboard.jsx
-│   │   └── RoomAudioControl.jsx
-│   │
-│   ├── data/
-│   │   └── ookuDataset.js
-│   │
-│   ├── services/
-│   │   ├── geminiTTS.js
-│   │   ├── ookuAudio.js
-│   │   └── ookuClassifier.js
-│   │
-│   ├── utils/
-│   │   └── ookuFallback.js
-│   │
-│   ├── pages/
-│   ├── App.jsx
-│   └── main.jsx
-│
-├── supabase/
-│   └── functions/
-│       └── gemini-tts/
-│
-├── package.json
-└── README.md
-```
-
----
-
-# 🚀 Installation
-
-## Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Thoufeeqquezz/ooku-detector.git
-```
-
-```bash
 cd ooku-detector
 ```
 
-## Install dependencies
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
----
-
-# ⚙️ Environment Variables
+### 3. Configure environment variables
 
 Create a `.env` file:
 
@@ -629,338 +248,196 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-Keep server-side Gemini credentials inside your Supabase Edge Function environment.
+For server-side Gemini functionality, configure the Gemini API key inside the Supabase Edge Function environment.
 
----
+**Never expose the Gemini API key in the frontend.**
 
-# ▶️ Run Locally
+### 4. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Open the Vite development URL shown in the terminal.
+Open the local URL shown in the terminal.
 
 ---
 
-# 🏗️ Production Build
+## 🎮 How To Use
 
-```bash
-npm run build
-```
+### Step 1 — Create a Room
 
-Preview the production build:
+One person clicks:
 
-```bash
-npm run preview
-```
+**🔥 CREATE ROOM**
+
+Enter your name and create a room.
 
 ---
 
-# 🌐 Deployment
+### Step 2 — Share The Code
 
-The frontend can be deployed using **Vercel**.
-
-Basic deployment flow:
+A room code such as:
 
 ```text
-GitHub
-   ↓
-Vercel
-   ↓
-npm run build
-   ↓
-dist/
-   ↓
-LIVE WEB APP
+KMEA482
 ```
 
-Supabase handles the backend, database, realtime messaging and Edge Functions.
+is generated.
+
+Share the code with your friends.
 
 ---
 
-# 📱 Mobile Support
+### Step 3 — Join
 
-OOKU DETECTOR is designed with a mobile-first interface.
+Friends select:
 
-The application supports:
+**👀 JOIN ROOM**
 
-- Responsive layouts
-- Large touch targets
-- Mobile keyboard handling
-- Fixed chat composer
-- Safe-area spacing
-- No horizontal scrolling
-- PWA installation
-- Android home-screen usage
+Enter:
+
+* Name
+* Room code
+
+and join the same room.
+
+---
+
+### Step 4 — Start Chatting
+
+Everyone can now see the same messages in real time.
+
+No refresh required.
+
+---
+
+### Step 5 — Let AI Judge You
+
+Keep chatting normally.
+
+If someone delivers an Ooku:
+
+```text
+💀 OOKU DETECTED
+
+🔥 DIRECT HIT
+
++50 POINTS
+```
+
+The leaderboard updates automatically.
+
+---
+
+### Step 6 — Finish The Chaos
+
+Players can leave individually.
+
+When everyone has left, the application displays the:
+
+# 🏆 FINAL SCOREBOARD
+
+Showing who caused the most damage.
+
+---
+
+## 🧪 Multiplayer Testing
+
+For testing, open the application in multiple browser windows.
 
 Example:
 
 ```text
-Phone
-  ↓
-Open Ooku Detector
-  ↓
-Add to Home Screen
-  ↓
-💀 OOKU DETECTOR
+Browser 1 → Thoufeek
+Browser 2 → Adil
+Browser 3 → Suhail
+Browser 4 → Farhan
 ```
 
----
-
-# 🧪 Multiplayer Testing
-
-Open the application in multiple browsers/devices.
-
-Example:
+All four join:
 
 ```text
-DEVICE 1
-Thoufeek
-Room: KMEA482
-
-DEVICE 2
-Adil
-Room: KMEA482
-
-DEVICE 3
-Suhail
-Room: KMEA482
-
-DEVICE 4
-Farhan
-Room: KMEA482
+KMEA482
 ```
 
-Test:
-
-- [ ] All users receive messages
-- [ ] Names are displayed correctly
-- [ ] Messages stay ordered
-- [ ] New members appear
-- [ ] Ooku detection appears for everyone
-- [ ] Damage updates correctly
-- [ ] Leaderboard updates in real time
-- [ ] Gemini voice plays correctly
-- [ ] Ooku reaction audio plays correctly
-- [ ] Duplicate events are prevented
-- [ ] Room isolation works correctly
-- [ ] Mobile layout works correctly
+Messages, Ooku detections, points and exits should synchronize in real time.
 
 ---
 
-# 🧠 Ooku Dataset
+## 📱 User Experience
 
-The project includes a curated Ooku dataset used as examples for AI classification.
+The interface is designed to be:
 
-Categories include:
+* Simple
+* Large
+* Easy to understand
+* Mobile friendly
+* Fast
+* Funny
+* Accessible to non-technical users
 
-```text
-NORMAL
-GENERAL_ROAST
-APPEARANCE
-CODING
-COLLEGE
-ATTENDANCE
-STUDIES
-FOOD
-FRIENDSHIP
-MONEY
-GAMING
-SPORTS
-SLEEP
-LATE_REPLY
-COUNTER_ROAST
-SARCASM
-```
+The goal is that someone should understand the application within **5 seconds**.
 
-The dataset contains examples in:
+No complicated dashboards.
 
-- Malayalam
-- Manglish
-- English
-- College slang
-- Casual friend-group language
-- Short messages
-- Long messages
-- Sarcastic messages
-- Emoji-heavy messages
+No unnecessary settings.
 
-Relevant examples can be provided to Gemini as few-shot context instead of sending the entire dataset for every message.
+No account creation.
+
+No confusing terminology.
+
+Just:
+
+**JOIN → CHAT → GET ROASTED → LAUGH → SCORE → EXIT**
 
 ---
 
-# 🛡️ Responsible AI
+## 🏆 Competition Philosophy
 
-OOKU DETECTOR is designed for **playful friend-group interaction**, not harassment.
+Most projects try to solve serious problems.
 
-The classifier should avoid triggering comedy reactions for:
+We asked:
 
-- Serious threats
-- Hate speech
-- Targeted harassment
-- Dangerous content
-- Non-comedic abuse
+> **"What if we build something completely unnecessary?"**
 
-The goal is:
+And then made it unnecessarily sophisticated.
 
-> **Be funny, not harmful.**
+We use:
 
----
+* AI
+* Real-time databases
+* Multiplayer architecture
+* Text-to-speech
+* Context-aware classification
+* Animations
+* Scoring systems
 
-# 🎯 Why We Built It
+...
 
-Chat applications are everywhere.
+to answer one extremely important question:
 
-AI assistants are everywhere.
-
-Leaderboards are everywhere.
-
-So we asked:
-
-### What happens when AI becomes the referee of your friend group?
-
-The result is completely unnecessary.
-
-And that's exactly why it's fun.
+# "BRO, WAS THAT OOKU?" 💀
 
 ---
 
-# 💡 The Technical Challenge
+## 👨‍💻 Built For
 
-The interesting part isn't simply detecting an insult.
+**Most Useless Project Competition**
 
-The real challenge is understanding:
-
-> **"Was that actually Ooku?"**
-
-That requires understanding:
-
-**Language + Context + Culture + Intent + Timing**
-
-Especially when the conversation mixes:
-
-```text
-Malayalam
-+
-Manglish
-+
-English
-+
-Slang
-+
-Sarcasm
-+
-Emojis
-+
-Friendship
-```
-
-That's what makes the project interesting beyond a simple keyword detector.
+Built with questionable decisions, unnecessary AI, and too much enthusiasm. 😂
 
 ---
 
-# 🏆 What Makes OOKU DETECTOR Different?
+## ⚠️ Disclaimer
 
-### Traditional Chat
+OOKU DETECTOR is a comedy project.
 
-```text
-Message
-   ↓
-Message appears
-```
+The Ooku classifications are for entertainment only.
 
-### OOKU DETECTOR
+The AI is **not actually qualified to judge your friendships.**
 
-```text
-Message
-   ↓
-Real-time delivery
-   ↓
-Context analysis
-   ↓
-AI classification
-   ↓
-Intensity scoring
-   ↓
-Damage calculation
-   ↓
-Combo detection
-   ↓
-Animation
-   ↓
-Audio reaction
-   ↓
-Leaderboard update
-```
-
-One message becomes an **interactive event**.
+Please don't end real friendships because of a `+100 POINTS` notification. 💀
 
 ---
 
-# 🛣️ Future Possibilities
-
-Possible future versions could include:
-
-- Better Malayalam/Manglish understanding
-- More advanced contextual classification
-- Custom Ooku reaction packs
-- Custom room themes
-- Team-vs-team Ooku battles
-- Tournament mode
-- Ooku replay
-- Session highlights
-- More awards
-- More audio packs
-- Community-created reaction packs
-
-The MVP intentionally stays focused on the core experience.
-
----
-
-# ⚠️ Disclaimer
-
-OOKU DETECTOR is an entertainment project.
-
-All:
-
-- Scores
-- Rankings
-- Damage
-- Diagnoses
-- Awards
-- Ooku classifications
-
-are intended for fun.
-
-The "friendship diagnosis" is completely fictional.
-
-**We are not doctors. 😂**
-
----
-
-# 👨‍💻 Creator
-
-## Thoufeek & Abhijith 
-
-Computer Science & Engineering
-
-Built as an experimental project exploring:
-
-**AI × Real-Time Systems × Voice × Gamification × Social Interaction**
-
----
-
-# 💀 The Entire Product in One Line
-
-> **A multiplayer chat where AI watches your friends roast each other and turns every successful Ooku into a live game event.**
-
----
-
-# 🔥 OOKU DETECTOR
-
-### Chat normally.
-
-### AI will judge you.
-
-## 💀
+# 💀 Chat normally. AI will judge you.
